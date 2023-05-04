@@ -163,7 +163,7 @@ class URInterface:
       if not self._cmd_queue.empty():
         cmd = self._cmd_queue.get()
         self._cb_conn.send(cmd) # TODO: should it be outside the lock?
-        print(cmd)
+        # print(cmd)
       self._cmd_lock.release()
       time.sleep(0)
   
@@ -209,8 +209,8 @@ class URInterface:
     self._tool_position = struct.unpack('>dddddd', msg[444:492])[:]
     self._tool_velocity = struct.unpack('>dddddd', msg[492:540])[:]
     self._tool_force = struct.unpack('>dddddd', msg[540:588])[:]
-    self.digital_inputs = int(struct.unpack('>Q', msg[684:692])[0])
-    #print self.digital_inputs
+    self.digital_inputs = struct.unpack('>8s', msg[684:692])[0]
+    # print (msg[684:692])
     #self._state_lock.release()
   
   def is_moving(self):

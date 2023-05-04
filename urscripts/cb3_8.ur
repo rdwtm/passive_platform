@@ -4,8 +4,8 @@ def kair_urscript():
   #---------------------------------------------------------------------
   # constants and variables
   #---------------------------------------------------------------------
-  host = "{host}"
-  port = {port}
+  host = "192.168.0.154"
+  port = 33333
   global qtarget = [0, 0, 0, 0, 0, 0]
   global posetarget = p[0, 0, 0, 0, 0, 0]
   global dqtarget = [0, 0, 0, 0, 0, 0]
@@ -78,7 +78,7 @@ def kair_urscript():
     time = receive_buffer[10] * FLOAT_SCALE
     blend = receive_buffer[11] * FLOAT_SCALE
 
-    movel(qtarget, acceleration, speed, time, blend)
+    movel(qtarget)
     
     enter_critical
       motionFinished = 1
