@@ -34,6 +34,7 @@ class URInterface:
   CMD_SERVO_Q = 5
   CMD_SPEED_Q = 6
   CMD_SPEED_P = 7
+  CMD_SET_IO = 9
   
   def __init__(self, robot_ip, host_port, command_port, data_port, ur_script):
     self._robot_ip = robot_ip
@@ -61,7 +62,7 @@ class URInterface:
     self._tool_velocity = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     self._tool_force = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     
-    self.digital_inputs = 0
+    self._digital_inputs = 0
     self.digital_outputs = 0
     
     self._state_lock = Lock()
@@ -119,6 +120,13 @@ class URInterface:
     force = self._tool_force[:]
     self._state_lock.release()
     return force
+  
+  @property
+  def digital_inputs(self):
+    self._state_lock.acquire()
+    di = self._digital_inputs[:]
+    self._state_lock.release()
+    return di
     
   def connect(self):
     print("Connecting to command port...")
@@ -200,18 +208,20 @@ class URInterface:
     frame_type = struct.unpack('B', msg[4:5])[0]
     
     robot_time = struct.unpack('>d', msg[4:12])[0]
-    
-    #self._state_lock.acquire()
-    self._joint_positions = struct.unpack('>dddddd', msg[252:300])[:]
-    self._joint_velocities = struct.unpack('>dddddd', msg[300:348])[:]
-    # self._joint_torques = struct.unpack('>dddddd', msg[300:348])[:] # TODO: torques not implemented
-    self._joint_currents = struct.unpack('>dddddd', msg[348:396])[:]
-    self._tool_position = struct.unpack('>dddddd', msg[444:492])[:]
-    self._tool_velocity = struct.unpack('>dddddd', msg[492:540])[:]
-    self._tool_force = struct.unpack('>dddddd', msg[540:588])[:]
-    self.digital_inputs = struct.unpack('>8s', msg[684:692])[0]
-    # print (msg[684:692])
-    #self._state_lock.release()
+    try:
+      #self._state_lock.acquire()
+      self._joint_positions = struct.unpack('>dddddd', msg[252:300])[:]
+      self._joint_velocities = struct.unpack('>dddddd', msg[300:348])[:]
+      # self._joint_torques = struct.unpack('>dddddd', msg[300:348])[:] # TODO: torques not implemented
+      self._joint_currents = struct.unpack('>dddddd', msg[348:396])[:]
+      self._tool_position = struct.unpack('>dddddd', msg[444:492])[:]
+      self._tool_velocity = struct.unpack('>dddddd', msg[492:540])[:]
+      self._tool_force = struct.unpack('>dddddd', msg[540:588])[:]
+      self._digital_inputs = struct.unpack('>8s', msg[684:692])[0]
+      # print (msg[684:692])
+      #self._state_lock.release()
+    except Exception as e:
+      print(e)
   
   def is_moving(self):
     return self._is_moving
@@ -258,8 +268,12 @@ class URInterface:
     a = int(a * 10000)
     v = int(v * 10000)
     r = int(r * 10000) 
-    t = int(t * 10000) 
-    cmd = struct.pack(">iiiiiiiiiii", self.CMD_MOVE_P, data[0], data[1], data[2], data[3], data[4], data[5], a, v, t, r)
+    t = int(t * 10000)
+    try: 
+      cmd = struct.pack(">iiiiiiiiiii", self.CMD_MOVE_P, data[0], data[1], data[2], data[3], data[4], data[5], a, v, t, r)
+    except struct.error:
+      print("struct error :" ) 
+      print(self.CMD_MOVE_P, data[0], data[1], data[2], data[3], data[4], data[5], a, v, t, r)
     self._cmd_lock.acquire()
     self._cmd_queue.put(cmd)
     self._cmd_lock.release()
@@ -308,6 +322,14 @@ class URInterface:
     self._cmd_lock.acquire()
     #while not self._cmd_queue.empty():
     #  self._cmd_queue.get()
+    self._cmd_queue.put(cmd)
+    self._cmd_lock.release()
+    return True # TODO: implement checking result
+  
+
+  def set_IO(self,id, state):
+    cmd = struct.pack(">iiiiiiiiiii", self.CMD_SET_IO, id, state,0,0,0,0,0,0,0,0)
+    self._cmd_lock.acquire()
     self._cmd_queue.put(cmd)
     self._cmd_lock.release()
     return True # TODO: implement checking result

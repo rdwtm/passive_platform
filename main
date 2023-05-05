@@ -1,0 +1,13 @@
+from connect import *
+from utils import *
+from base import *
+from uchwyt import *
+
+robot = connect()
+if not robot.connected:
+    print("connect failure")
+print(krancowka(robot))
+if krancowka(robot):
+    bazowanie(robot)
+print("zbazowany")
+uchwyt(robot)
