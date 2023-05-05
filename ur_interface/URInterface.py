@@ -66,6 +66,9 @@ class URInterface:
     self._digital_inputs = 0
     self.digital_outputs = 0
     
+    self.cart_trans = None 
+    self.is_on_base = None
+
     self._state_lock = Lock()
     self._cmd_lock = Lock()
   def __del__(self):

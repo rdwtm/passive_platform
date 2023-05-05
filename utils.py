@@ -62,10 +62,10 @@ def distance(robot, position):
     pos=check_position(robot)[1]
     return abs(pos-position)
 
-def get_positions(file, name):
+def get_positions(file = "positions.json", name=""):
     # otwarcie pliku i wczytanie zawartości do zmiennej
-    with open(file, 'r') as file:
-        positions = json.load(file)
+    with open(file, 'r') as f:
+        positions = json.load(f)
 
     # przeszukanie listy pozycji w celu znalezienia pozycji o nazwie "position_1"
     for position in positions:

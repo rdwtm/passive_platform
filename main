@@ -7,10 +7,30 @@ from set_positions import *
 robot = connect()
 if not robot.connected:
     print("connect failure")
-print(krancowka(robot))
-if krancowka(robot):
-    bazowanie(robot)
-print("zbazowany")
-uchwyt(robot)
 
+bazowanie(robot)
+
+print("zbazowany")
+# uchwyt(robot)
+# uchwyt_przesuw(robot, 0.1)
 # save_position(robot, "settings.json")
+# save_position(robot)
+klocek = get_positions(name="klocek")
+nad_klockiem = add_or_subtract_tuples(klocek,  (0.0, 0.0, 0.1, 0.0, 0.0, 0.0),'+')
+robot.move_to_pose(nad_klockiem, v=0.2)
+robot.move_to_pose_linear(klocek, v=0.2)
+time.sleep(3)
+robot.move_to_pose(nad_klockiem, v=0.2)
+
+
+uchwyt_przesuw(robot, 0.1)
+
+print(robot.cart_trans)
+klocek = add_or_subtract_tuples(klocek,  (0.0, robot.cart_trans, 0.0, 0.0, 0.0, 0.0),'+')
+nad_klockiem = add_or_subtract_tuples(klocek,  (0.0, 0.0, 0.1, 0.0, 0.0, 0.0),'+')
+robot.move_to_pose(nad_klockiem, v=0.2)
+time.sleep(1)
+robot.move_to_pose_linear(klocek, v=0.2)
+time.sleep(1)
+robot.move_to_pose(nad_klockiem, v=0.2)
+time.sleep(1)

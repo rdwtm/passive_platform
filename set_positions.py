@@ -7,8 +7,8 @@ def save_position(robot, file = "positions.json"):
     if not os.path.exists(file):
         positions = []
     else:
-        with open(file, 'r') as file:
-            positions = json.load(file)
+        with open(file, 'r') as f:
+            positions = json.load(f)
 
     
     # pobranie nazwy pozycji od użytkownika
@@ -38,8 +38,8 @@ def save_position(robot, file = "positions.json"):
     print(positions)
 
     # zapisanie pozycji do pliku JSON
-    with open(file, 'w') as file:
-        json.dump(positions, file, indent=4)
+    with open(file, 'w') as f:
+        json.dump(positions, f, indent=4)
 
     print(f"Pozycja '{name}' została zapisana do pliku {file}.")
     
