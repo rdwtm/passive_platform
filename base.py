@@ -28,24 +28,32 @@ def bazowanie(robot):
         print("dalej " + str(dalej))
         # pose = robot.tool_position
         if dalej:
-            
+            if distance(robot, -0.27743996273586136) < 0.03:
+                vel = 0.01
+                step = (0.0,-0.001,0.0,0.0,0.0,0.00)
+            if distance(robot, -0.27743996273586136) < 0.1:
+                vel = 0.01
+                step = (0.0,-0.01,0.0,0.0,0.0,0.00)
+            else:
+                vel = 0.5
+                step = (0.0,-0.1,0.0,0.0,0.0,0.00)
             print("krańcówka " + str(kr))
-            pose = add_or_subtract_tuples(check_position(robot), (0.0,-0.01,0.0,0.0,0.0,0.00),'+')
+            pose = add_or_subtract_tuples(check_position(robot), step,'+')
             # print(robot._tool_position)
             print(pose)
             print("a"+str(a))
             print(distance(robot, -0.27743996273586136))
-            if distance(robot, -0.27743996273586136) < 0.1:
-                vel = 0.01
-            else:
-                vel = 0.2
+            
             robot.move_to_pose(pose, v=vel, a=0.1)
             a+=1
             time.sleep(0.1)
         kr = krancowka(robot)
-    print("krańcówka " + str(kr))
+    # print("krańcówka " + str(kr))
+    time.sleep(0.5)
     set_brake(robot)
-    time.sleep(1)
+    time.sleep(0.5)
+    set_brake(robot)
+    set_brake(robot)
     robot.move_to_configuration(HOME_POSITION_CONF,v=0.5)
     print("asdf")
     # while not is_on_place(robot, (-0.39923568462864895, 0.752126277040094, 0.21766859736020782, 3.0911890504964474, 0.10019958260730014, -0.03245276753244325)):

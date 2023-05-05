@@ -35,6 +35,7 @@ class URInterface:
   CMD_SPEED_Q = 6
   CMD_SPEED_P = 7
   CMD_SET_IO = 9
+  CMD_SET_FREEDRIVE = 11
   
   def __init__(self, robot_ip, host_port, command_port, data_port, ur_script):
     self._robot_ip = robot_ip
@@ -329,6 +330,13 @@ class URInterface:
 
   def set_IO(self,id, state):
     cmd = struct.pack(">iiiiiiiiiii", self.CMD_SET_IO, id, state,0,0,0,0,0,0,0,0)
+    self._cmd_lock.acquire()
+    self._cmd_queue.put(cmd)
+    self._cmd_lock.release()
+    return True # TODO: implement checking result
+
+  def set_freedrive(self):
+    cmd = struct.pack(">iiiiiiiiiii", self.CMD_SET_FREEDRIVE,0,0,0,0,0,0,0,0,0,0)
     self._cmd_lock.acquire()
     self._cmd_queue.put(cmd)
     self._cmd_lock.release()

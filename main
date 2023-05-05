@@ -2,6 +2,7 @@ from connect import *
 from utils import *
 from base import *
 from uchwyt import *
+from set_positions import *
 
 robot = connect()
 if not robot.connected:
@@ -11,3 +12,5 @@ if krancowka(robot):
     bazowanie(robot)
 print("zbazowany")
 uchwyt(robot)
+
+# save_position(robot, "settings.json")

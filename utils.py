@@ -1,4 +1,5 @@
 import time
+import json
 def add_or_subtract_tuples(a, b, op='+'):
     if op == '+':
         return tuple(x + y for x, y in zip(a, b))
@@ -61,3 +62,13 @@ def distance(robot, position):
     pos=check_position(robot)[1]
     return abs(pos-position)
 
+def get_positions(file, name):
+    # otwarcie pliku i wczytanie zawartości do zmiennej
+    with open(file, 'r') as file:
+        positions = json.load(file)
+
+    # przeszukanie listy pozycji w celu znalezienia pozycji o nazwie "position_1"
+    for position in positions:
+        if position['name'] == name:
+            return (position['tcp_pose'])
+            

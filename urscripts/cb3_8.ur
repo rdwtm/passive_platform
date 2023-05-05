@@ -252,7 +252,14 @@ def kair_urscript():
     
     set_payload(mass, center_of_gravity) 
   end
+  #---------------------------------------------------------------------
+  # freedrive enable
+  #---------------------------------------------------------------------
+  def freedrive_enable():
+    textmsg("freedrive_enable()")
+  #  set_freedrive(1, [0,0,0,0,0,0], [0,0,0,0,0,0])
 
+  end
   #---------------------------------------------------------------------
   # The main loop
   #---------------------------------------------------------------------
@@ -345,6 +352,9 @@ def kair_urscript():
       
     elif receive_buffer[1] == 10: #10: Set Payload
       set_tcp_payload()	
+
+    elif receive_buffer[1] == 11: #11: Freedrive
+      freedrive_enable()	
       
     elif receive_buffer[1] == 9999: #1: Do nothing
       #isStopped = 0
