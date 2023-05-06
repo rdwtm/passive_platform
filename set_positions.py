@@ -13,6 +13,7 @@ def save_position(robot, file = "positions.json"):
     
     # pobranie nazwy pozycji od użytkownika
     name = input('Podaj nazwę pozycji: ')
+    cart_pos = float(input('Podaj pozycję wózka w [m]: '))
 
     # sprawdzenie, czy pozycja o podanej nazwie już istnieje
     for position in positions:
@@ -31,7 +32,7 @@ def save_position(robot, file = "positions.json"):
     tcp_pose = check_position(robot)
     print(tcp_pose)
     # utworzenie słownika z pozycją robota
-    position = {'name': name, 'tcp_pose': tcp_pose}
+    position = {'name': name, 'tcp_pose': tcp_pose, 'translation': cart_pos}
     print(position)
     # dodanie nowej pozycji do listy
     positions.append(position)

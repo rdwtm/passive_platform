@@ -1,5 +1,7 @@
 import time
 import json
+import math
+
 def add_or_subtract_tuples(a, b, op='+'):
     if op == '+':
         return tuple(x + y for x, y in zip(a, b))
@@ -70,5 +72,40 @@ def get_positions(file = "positions.json", name=""):
     # przeszukanie listy pozycji w celu znalezienia pozycji o nazwie "position_1"
     for position in positions:
         if position['name'] == name:
-            return (position['tcp_pose'])
-            
+            return position['tcp_pose'], position['translation']
+        
+def transform_manager(robot, pos):
+    tcp_pose, transform = get_positions(name=pos)
+    global_pos_y = tcp_pose[1]-transform
+    r = math.sqrt(pow(tcp_pose[0],2)+pow(transform-tcp_pose[1],2)+pow(tcp_pose[2],2))
+    # rmin = -1
+    # rmax = 1
+    # trmin = 0
+    # while rmin < -0.6:
+    #     rmin = trmin - r
+    #     trmin += 0.1
+    # trmax = 0.7
+    # while rmax > 0.6:
+    #     rmax = trmax - r
+    #     trmax -= 0.1
+    trmin = -0.7 + r
+    trmax = 0.7 + r
+    if trmin < 0:
+        trmin = 0
+    if trmax > 0.7:
+        trmax = 0.7
+    if (trmin<robot.cart_trans) and (trmax>robot.cart_trans):
+        print(False)
+        return False
+    else:
+        print(trmin)
+        print(trmax)
+        print(robot.cart_trans)
+        print((trmin+trmax)/2)
+        return (trmin+trmax)/2
+    
+
+    
+
+
+      

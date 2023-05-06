@@ -1,5 +1,12 @@
 def kair_urscript():
-	textmsg("Starting program kair_urscript")
+	
+  
+  
+  
+  
+  
+  
+  textmsg("Starting program kair_urscript")
   
   #---------------------------------------------------------------------
   # constants and variables
@@ -260,6 +267,35 @@ def kair_urscript():
   #  set_freedrive(1, [0,0,0,0,0,0], [0,0,0,0,0,0])
 
   end
+    #---------------------------------------------------------------------
+  # open grip
+  #---------------------------------------------------------------------
+  def open_grip():
+    textmsg(get_standard_digital_in( 0 ))
+    # Ustawienie wartości siły i prędkości
+    global gripper_force = 50
+    global gripper_speed = 50
+
+    # Zamknięcie chwytaka
+    # rg_grip(80, 29.0, tool_index = 0, blocking = True, depth_comp = False, popupmsg = True)
+
+
+  end
+
+   #---------------------------------------------------------------------
+  # close grip
+  #---------------------------------------------------------------------
+  def close_grip():
+    textmsg("close_grip()")
+    # Ustawienie wartości siły i prędkości
+    global gripper_force = 50
+    global gripper_speed = 50
+
+    # Zamknięcie chwytaka
+    # rg_grip(10, 29.0, tool_index = 0, blocking = True, depth_comp = False, popupmsg = True)
+
+
+  end
   #---------------------------------------------------------------------
   # The main loop
   #---------------------------------------------------------------------
@@ -356,6 +392,12 @@ def kair_urscript():
     elif receive_buffer[1] == 11: #11: Freedrive
       freedrive_enable()	
       
+    elif receive_buffer[1] == 12: #12: open grip
+      open_grip()	
+
+    elif receive_buffer[1] == 13: #13: open grip
+      close_grip()
+      
     elif receive_buffer[1] == 9999: #1: Do nothing
       #isStopped = 0
       #isServoing = 0
@@ -369,3 +411,5 @@ def kair_urscript():
 end
 
 run program
+
+

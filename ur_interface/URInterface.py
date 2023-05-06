@@ -36,6 +36,8 @@ class URInterface:
   CMD_SPEED_P = 7
   CMD_SET_IO = 9
   CMD_SET_FREEDRIVE = 11
+  CMD_OPEN_GRIP = 12
+  CMD_CLOSE_GRIP = 13
   
   def __init__(self, robot_ip, host_port, command_port, data_port, ur_script):
     self._robot_ip = robot_ip
@@ -74,7 +76,7 @@ class URInterface:
   def __del__(self):
     self.connected = False
     # self.data_thread.join()
-    # self.disconnect()
+    self.disconnect()
     
   @property
   def joint_positions(self):
@@ -166,7 +168,10 @@ class URInterface:
   def disconnect(self):
     self._connected = False
     self._data_socket.close()
-    
+    self._cb_socket.close()
+    self._cmd_socket.close()
+  
+  
   def cmd_thread(self):
     print("Starting command thread...")
     while self.connected:
@@ -340,6 +345,20 @@ class URInterface:
 
   def set_freedrive(self):
     cmd = struct.pack(">iiiiiiiiiii", self.CMD_SET_FREEDRIVE,0,0,0,0,0,0,0,0,0,0)
+    self._cmd_lock.acquire()
+    self._cmd_queue.put(cmd)
+    self._cmd_lock.release()
+    return True # TODO: implement checking result
+  
+  def open_grip(self):
+    cmd = struct.pack(">iiiiiiiiiii", self.CMD_OPEN_GRIP,0,0,0,0,0,0,0,0,0,0)
+    self._cmd_lock.acquire()
+    self._cmd_queue.put(cmd)
+    self._cmd_lock.release()
+    return True # TODO: implement checking result
+  
+  def close_grip(self):
+    cmd = struct.pack(">iiiiiiiiiii", self.CMD_CLOSE_GRIP,0,0,0,0,0,0,0,0,0,0)
     self._cmd_lock.acquire()
     self._cmd_queue.put(cmd)
     self._cmd_lock.release()

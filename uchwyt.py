@@ -1,6 +1,6 @@
 from utils import *
 HOME_POSITION_CONF =[0, -1.57, 1.57, -1.57, -1.57, 0]
-UCHWYT = get_positions("settings.json", "uchwyt")
+UCHWYT, translation= get_positions("settings.json", "uchwyt")
 PRZED = UCHWYT.copy()
 PRZED[0] = PRZED[0]-0.2
 GORA = PRZED.copy()
@@ -86,39 +86,39 @@ def uchwyt_przesuw1(robot, p):
 
 
 def uchwyt_przesuw(robot, p):
-    print(robot.is_on_base)
-    cart_trans = -robot.cart_trans
+    cart_trans = robot.cart_trans
     ### pozycje przed przejazdem
     gora = add_or_subtract_tuples(GORA, (0.0, cart_trans, 0.0, 0.0, 0.0, 0.0),"+")
     przed = add_or_subtract_tuples(PRZED, (0.0, cart_trans, 0.0, 0.0, 0.0, 0.0),"+")
     uchwyt = add_or_subtract_tuples(UCHWYT, (0.0, cart_trans, 0.0, 0.0, 0.0, 0.0),"+")
     if robot.is_on_base:
-        robot.move_to_pose(gora, v=0.2)
-        robot.move_to_pose(przed, v=0.2)
-        print("2")
+        if not is_on_place(robot, przed):
+            robot.move_to_pose(gora, v=0.2)
+            robot.move_to_pose(przed, v=0.2)
+        # print("2")
         while not is_on_place(robot, przed):
-            print("3")
+            # print("3")
             time.sleep(0.1)
         robot.move_to_pose(uchwyt, v=0.05)
         while not is_on_place(robot, uchwyt):
-            print("4")
+            # print("4")
             time.sleep(0.1)
         release_brake(robot)
         time.sleep(1)
 
         ### pozycje po przejeździe
-        gora = add_or_subtract_tuples(GORA, (0.0, cart_trans+p, 0.0, 0.0, 0.0, 0.0),"+")
-        przed = add_or_subtract_tuples(PRZED, (0.0, cart_trans+p, 0.0, 0.0, 0.0, 0.0),"+")
-        uchwyt = add_or_subtract_tuples(UCHWYT, (0.0, cart_trans+p, 0.0, 0.0, 0.0, 0.0),"+")
+        gora = add_or_subtract_tuples(GORA, (0.0, p, 0.0, 0.0, 0.0, 0.0),"+")
+        przed = add_or_subtract_tuples(PRZED, (0.0, p, 0.0, 0.0, 0.0, 0.0),"+")
+        uchwyt = add_or_subtract_tuples(UCHWYT, (0.0, p, 0.0, 0.0, 0.0, 0.0),"+")
         robot.move_to_pose_linear(uchwyt, v=0.05)
         while not is_on_place(robot, uchwyt):
-            print("5")
+            # print("5")
             time.sleep(0.1)
         time.sleep(1)
         set_brake(robot)
         time.sleep(1)
         robot.move_to_pose_linear(przed, v=0.05)
         while not is_on_place(robot, przed):
-            print("5")
+            # print("6")
             time.sleep(0.1)
-        robot.cart_trans=cart_trans+p
+        robot.cart_trans=p
