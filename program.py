@@ -46,17 +46,17 @@ import socket
 import struct
 
 HOST = "192.168.0.152" # adres IP robota
-PORT = 30003 # port używany przez interfejs użytkownika UR
+PORT = 33333 # port używany przez interfejs użytkownika UR
 
 # utworzenie socketu i połączenie z robotem
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
 # wysłanie komendy do robota
-s.send("sec io_in ()\n".encode())
+# s.send("sec io_in ()\n".encode())
 
 # odbiór danych zwrotnych od robota
-data = s.recv(1024)
+data = s.recv(1)
 print(data)
 # interpretacja danych zwrotnych jako listy bitów
 bits = struct.unpack(">III", data[0:12])[:]

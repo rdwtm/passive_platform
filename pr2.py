@@ -21,3 +21,34 @@
 # else:
 #     print("False")
 
+import math
+
+# Funkcja wyznaczająca punkty przecięcia prostej z okręgiem
+def intersection_points(line, center, radius):
+    a = line[0]
+    b = line[1]
+    c = line[2]
+
+    x_c = center[0]
+    y_c = center[1]
+
+    # Obliczenie wartości delta
+    delta = (2*a*x_c + 2*b*y_c + 2*c)**2 - 4*(a**2 + b**2)*(c**2 + y_c**2 + x_c**2 - radius**2)
+
+    # Sprawdzenie, czy prosta przecina okrąg
+    if delta < 0:
+        print("Prosta nie przecina okręgu.")
+        return []
+
+    # Obliczenie punktów przecięcia
+    x1 = (-2*a*x_c - 2*b*y_c - 2*c + math.sqrt(delta)) / (2*(a**2 + b**2))
+    x2 = (-2*a*x_c - 2*b*y_c - 2*c - math.sqrt(delta)) / (2*(a**2 + b**2))
+    return (x1, x2)
+
+# Przykładowe wywołanie funkcji
+line = (1, 0, 0)
+center = (0.0, 0.0)
+radius = 0.7
+
+points = intersection_points(line, center, radius)
+print(points)

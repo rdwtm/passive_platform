@@ -35,7 +35,7 @@ class URInterface:
   CMD_SPEED_Q = 6
   CMD_SPEED_P = 7
   CMD_SET_IO = 9
-  CMD_SET_FREEDRIVE = 11
+  CMD_SET_BASING = 11
   CMD_OPEN_GRIP = 12
   CMD_CLOSE_GRIP = 13
   
@@ -227,6 +227,7 @@ class URInterface:
       self._tool_velocity = struct.unpack('>dddddd', msg[492:540])[:]
       self._tool_force = struct.unpack('>dddddd', msg[540:588])[:]
       self._digital_inputs = struct.unpack('>8s', msg[684:692])[0]
+      # print(self._cmd_socket.recv(10))
       # print (msg[684:692])
       #self._state_lock.release()
     except Exception as e:
@@ -237,6 +238,7 @@ class URInterface:
 
   def send_ur_script(self, script):
     self._cmd_socket.sendall(bytes(script, 'utf-8'))
+    print(self._cmd_socket.recv(10))
     return True
     
   def stop_robot(self):
@@ -244,6 +246,8 @@ class URInterface:
     self._cmd_lock.acquire()
     while not self._cmd_queue.empty():
       self._cmd_queue.get()
+      print("get")
+    print("not_get") 
     self._cmd_queue.put(cmd)
     self._cmd_lock.release()
     return True # TODO: implement checking result
@@ -343,8 +347,8 @@ class URInterface:
     self._cmd_lock.release()
     return True # TODO: implement checking result
 
-  def set_freedrive(self):
-    cmd = struct.pack(">iiiiiiiiiii", self.CMD_SET_FREEDRIVE,0,0,0,0,0,0,0,0,0,0)
+  def set_basing(self):
+    cmd = struct.pack(">iiiiiiiiiii", self.CMD_SET_BASING,0,0,0,0,0,0,0,0,0,0)
     self._cmd_lock.acquire()
     self._cmd_queue.put(cmd)
     self._cmd_lock.release()
