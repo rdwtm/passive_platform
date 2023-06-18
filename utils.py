@@ -64,15 +64,15 @@ def set_DO(robot, id, state):
 
 def set_brake(robot):
     set_DO(robot, 0, 1)
-    time.sleep(1)
+    time.sleep(2)
     set_DO(robot, 0, 0)
-    time.sleep(0.5)
+    time.sleep(2)
 
 def release_brake(robot):
     set_DO(robot, 1, 1)
-    time.sleep(1)
+    time.sleep(2)
     set_DO(robot, 1, 0)
-    time.sleep(0.5)
+    time.sleep(2)
 
 def check_position(robot):
     position = robot.tool_position

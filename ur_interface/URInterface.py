@@ -167,9 +167,9 @@ class URInterface:
     
   def disconnect(self):
     self._connected = False
-    self._data_socket.close()
-    self._cb_socket.close()
-    self._cmd_socket.close()
+    # self._data_socket.close()
+    # self._cb_socket.close()
+    # self._cmd_socket.close()
   
   
   def cmd_thread(self):

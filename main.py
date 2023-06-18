@@ -66,14 +66,14 @@ def home():
 
 def move_to_position():
     os.system('clear')
-    # if not robot.is_on_base:
-    #     print("Please home the robot first.")
-    # else:
-    #     position = input("Enter the desired position: ")
-    #     print("Moving robot to position", position)
-    #     move_pos_lin(robot, position)
-    #     print("Robot has reached position", position)
-    robot.open_grip()
+    if not robot.is_on_base:
+        print("Please home the robot first.")
+    else:
+        position = input("Enter the desired position: ")
+        print("Moving robot to position", position)
+        move_pos_lin(robot, position)
+        print("Robot has reached position", position)
+    # robot.open_grip()
 
 def save_pos():
     os.system('clear')
